@@ -12,4 +12,4 @@ async def save_file(file: UploadFile) -> str:
     with open(filepath, "wb") as buffer:
         buffer.write(await file.read())
 
-    return file.filename
+    return filepath
