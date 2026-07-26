@@ -3,18 +3,27 @@ from langchain_core.messages import AIMessage
 
 def get_agent_text(message) -> str:
     """
-    Extract readable text from an AIMessage.
+    Extract all user-visible text from a LangChain AIMessage.
     """
 
-    if isinstance(message, AIMessage):
-        if isinstance(message.content, str):
-            return message.content
+    if not isinstance(message, AIMessage):
+        return str(message)
 
-        if isinstance(message.content, list):
-            return "".join(
-                block.get("text", "")
-                for block in message.content
-                if isinstance(block, dict)
+    content = message.content
+
+    if isinstance(content, str):
+        return content
+
+    if isinstance(content, list):
+        text_blocks = [
+            block["text"]
+            for block in content
+            if (
+                isinstance(block, dict)
+                and block.get("type") == "text"
             )
+        ]
 
-    return str(message)
+        return "\n".join(text_blocks)
+
+    return ""
