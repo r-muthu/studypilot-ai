@@ -7,7 +7,33 @@ from app.services.document_retrieval import get_document_metadata, list_document
 @tool
 def retrieve_context(query: str) -> str:
     """
-    Retrieve relevant information from uploaded study materials.
+    Searches across ALL uploaded documents.
+
+    Returns the most relevant passages together with their document sources.
+
+    Use this tool when:
+
+    • the user does not specify a document
+    • the question spans multiple documents
+    • the user wants a general answer using all uploaded materials
+
+    Args:
+        query:
+            A semantic description of the information to retrieve.
+            Never leave this empty.
+
+    Good queries:
+        - "roles responsible for academic matters"
+        - "requirements for constitutional amendments"
+        - "advantages of diffusion models"
+
+    Poor queries:
+        - ""
+        - "role"
+        - "draft"
+        - "document"
+
+    Prefer descriptive concepts over isolated keywords.
     """
 
     documents = retrieve_documents(query)
@@ -38,7 +64,29 @@ def retrieve_document(
     query: str,
 ) -> str:
     """
-    Retrieve relevant passages from one uploaded document.
+    Retrieve passages from one uploaded document.
+
+    Args:
+        filename:
+            Must exactly match one filename returned by
+            list_uploaded_documents().
+
+        query:
+            A semantic description of the information to retrieve.
+            Never leave this empty.
+
+    Good queries:
+        - "roles responsible for academic matters"
+        - "requirements for constitutional amendments"
+        - "advantages of diffusion models"
+
+    Poor queries:
+        - ""
+        - "role"
+        - "draft"
+        - "document"
+
+    Prefer descriptive concepts over isolated keywords.
     """
 
     documents = retrieve_documents(
@@ -65,7 +113,15 @@ def retrieve_document(
 @tool
 def list_uploaded_documents() -> str:
     """
-    List every uploaded study material.
+    Returns all uploaded filenames.
+
+    Use this tool when:
+
+    • the user asks what documents are available
+
+    • the user refers to "the paper", "this constitution",
+    "that lecture", etc., and you must determine which uploaded
+    document they mean
     """
 
     documents = list_documents()
@@ -81,7 +137,17 @@ def document_metadata(
     filename: str,
 ) -> str:
     """
-    Return metadata about one uploaded document.
+    Returns metadata about one uploaded document.
+
+    Use this tool when the user asks about:
+
+    • document information
+
+    • number of pages
+
+    • number of chunks
+
+    • upload metadata
     """
 
     metadata = get_document_metadata(filename)
