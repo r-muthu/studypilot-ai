@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "http://localhost:8000",
+    baseURL: import.meta.env.VITE_API_URL,
     headers: {
         "Content-Type": "application/json",
     },
@@ -50,10 +50,12 @@ export async function uploadPDF(file: File): Promise<UploadResponse> {
 // ---------- Chat ----------
 
 export async function sendMessage(
-    message: string
+    conversationId: string,
+    message: string,
 ): Promise<ChatResponse> {
     const response = await api.post("/chat", {
-        message,
+        conversation_id: conversationId,
+        message: message,
     });
 
     return response.data;

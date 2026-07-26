@@ -3,6 +3,8 @@ import { sendMessage } from "../services/api";
 import type { ChatMessage } from "../types/chat";
 
 export function useChat() {
+    const [conversationId] = useState(() => crypto.randomUUID());
+    
     const [messages, setMessages] = useState<ChatMessage[]>([
         {
             role: "assistant",
@@ -29,7 +31,7 @@ export function useChat() {
         setPrompt("");
 
         try {
-            const response = await sendMessage(userPrompt);
+            const response = await sendMessage(conversationId, userPrompt);
 
             setMessages((prev) => [
                 ...prev,
